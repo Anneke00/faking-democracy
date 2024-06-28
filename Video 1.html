@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passwortgeschützter Video-Player</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+        h2 {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        .form-control, .btn-primary {
+            background-color: #333;
+            border: 1px solid #00ffff;
+            color: white;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        .form-control::placeholder {
+            color: #bbb;
+            text-shadow: none;
+        }
+        .btn-primary {
+            background-color: #00ffff;
+            border: none;
+            color: black;
+        }
+        .btn-primary:hover {
+            background-color: #00b3b3;
+        }
+        #error {
+            color: #ff4c4c;
+            text-shadow: 0 0 5px #ff4c4c;
+        }
+        .video-container {
+            display: none;
+            text-align: center;
+        }
+        footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            background-color: #111;
+            color: #888;
+            text-align: center;
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        .modal-content {
+            background-color: #222;
+            border: 1px solid #00ffff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <h2 class="text-center">Passwortgeschützter Video-Player</h2>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="password">Passwort:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Passwort eingeben">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Einloggen</button>
+                </form>
+                <div id="error" class="text-danger mt-3" style="display:none;">
+                    Falsches Passwort, bitte versuchen Sie es erneut.
+                </div>
+                <div class="video-container mt-5">
+                    <video id="videoPlayer" controls width="100%">
+                        <source src="dein-video.mp4" type="video/mp4">
+                        Dein Browser unterstützt das Video-Tag nicht.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        © 2024 Dein Unternehmen. Alle Rechte vorbehalten.
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Information</h5>
+                </div>
+                <div class="modal-body">
+                    Das Video wird in Kürze abgespielt...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS und jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('passwordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const password = document.getElementById('password').value;
+            const correctPassword = 'test'; // Ersetze 'deinPasswort' mit dem gewünschten Passwort
+            if (password === correctPassword) {
+                document.getElementById('error').style.display = 'none';
+                $('#infoModal').modal('show');
+                setTimeout(function() {
+                    $('#infoModal').modal('hide');
+                    document.querySelector('.video-container').style.display = 'block';
+                    const video = document.getElementById('videoPlayer');
+                    if (video.requestFullscreen) {
+                        video.requestFullscreen();
+                    } else if (video.mozRequestFullScreen) { /* Firefox */
+                        video.mozRequestFullScreen();
+                    } else if (video.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        video.webkitRequestFullscreen();
+                    } else if (video.msRequestFullscreen) { /* IE/Edge */
+                        video.msRequestFullscreen();
+                    }
+                    video.play();
+                }, 5000);
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
